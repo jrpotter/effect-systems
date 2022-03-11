@@ -1,0 +1,80 @@
+  cabal-version:      3.0
+  name:               hello-world
+  version:            0.1.0.0
+
+  synopsis:           The Corner programming language.
+  -- A longer description of the package.
+  -- description:
+
+  -- license:
+  author:             <author>
+  maintainer:         <author>@<email>.com
+  bug-reports:        https://github.com/<owner>/<repo>/issues
+
+  -- A copyright notice.
+  -- copyright:
+  -- category:
+  extra-source-files:
+    CHANGELOG.md
+    README.md
+
+common hello-world-common
+  default-language:   Haskell2010
+  default-extensions: BangPatterns,
+                      BinaryLiterals,
+                      ConstrainedClassMethods,
+                      ConstraintKinds,
+                      DeriveDataTypeable,
+                      DeriveFoldable,
+                      DeriveFunctor,
+                      DeriveGeneric,
+                      DeriveLift,
+                      DeriveTraversable,
+                      DoAndIfThenElse,
+                      EmptyCase,
+                      EmptyDataDecls,
+                      EmptyDataDeriving,
+                      ExistentialQuantification,
+                      ExplicitForAll,
+                      -- Enabled by default, but not supported by ghc-8.10.
+                      -- FieldSelectors,
+                      FlexibleContexts,
+                      FlexibleInstances,
+                      ForeignFunctionInterface,
+                      GADTSyntax,
+                      GeneralisedNewtypeDeriving,
+                      HexFloatLiterals,
+                      ImplicitPrelude,
+                      ImportQualifiedPost,
+                      InstanceSigs,
+                      KindSignatures,
+                      MonomorphismRestriction,
+                      MultiParamTypeClasses,
+                      NamedFieldPuns,
+                      NamedWildCards,
+                      NumericUnderscores,
+                      PatternGuards,
+                      PolyKinds,
+                      PostfixOperators,
+                      RankNTypes,
+                      RelaxedPolyRec,
+                      ScopedTypeVariables,
+                      StandaloneDeriving,
+                      StandaloneKindSignatures,
+                      StarIsType,
+                      TraditionalRecordSyntax,
+                      TupleSections,
+                      TypeApplications,
+                      TypeOperators,
+                      TypeSynonymInstances
+  build-depends:      base,
+                      relude
+  mixins:             base hiding (Prelude),
+                      relude (Relude as Prelude),
+                      relude
+  ghc-options:        -Wall
+
+executable hello-world
+  import:             hello-world-common
+  main-is:            Main.hs
+  hs-source-dirs:     app
