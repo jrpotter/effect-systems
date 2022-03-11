@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -e
 
 filesToFormat=$(
@@ -8,6 +8,6 @@ filesToFormat=$(
 
 for path in $filesToFormat
 do
-  google-java-format --replace $path
+  ormolu --mode inplace $path
   git add $path
 done;
