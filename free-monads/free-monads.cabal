@@ -1,8 +1,8 @@
   cabal-version:      3.0
-  name:               hello-world
+  name:               free-monads
   version:            0.1.0.0
 
-  synopsis:           The Corner programming language.
+  synopsis:           Free monads implementation.
   -- A longer description of the package.
   -- description:
 
@@ -18,7 +18,7 @@
     CHANGELOG.md
     README.md
 
-common hello-world-common
+common free-monads-common
   default-language:   Haskell2010
   default-extensions: BangPatterns,
                       BinaryLiterals,
@@ -74,7 +74,6 @@ common hello-world-common
                       relude
   ghc-options:        -Wall
 
-executable hello-world
-  import:             hello-world-common
-  main-is:            Main.hs
-  hs-source-dirs:     app
+library
+  import:             free-monads-common
+  hs-source-dirs:     src
