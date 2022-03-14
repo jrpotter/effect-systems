@@ -77,4 +77,6 @@ common free-monads-common
 library
   import:             free-monads-common
   hs-source-dirs:     src
-  exposed-modules:    Control.Monad.Free
+  exposed-modules:    Control.Monad.Free,
+                      Control.Monad.Free.Compose,
+                      Control.Monad.Free.Scoped

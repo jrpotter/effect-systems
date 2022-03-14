@@ -20,7 +20,6 @@ module Control.Monad.Free
 
     -- * Free Monad
     Free (..),
-    monadicAp,
 
     -- * Teletype
     Teletype (..),
@@ -77,17 +76,15 @@ instance (Functor f) => Functor (NonEmptyList' f) where
   fmap f (Last' a) = Last' (f a)
   fmap f (Cons' a g) = Cons' (f a) (fmap (fmap f) g)
 
+{- ORMOLU_DISABLE -}
+
 twoPlusThree :: NonEmptyList' (Reader Int) Int
 twoPlusThree =
-  Cons'
-    2
-    ( reader
-        ( \a ->
-            Cons'
-              3
-              (reader (\b -> Last' (a + b)))
-        )
-    )
+  Cons' 2 (reader (\a ->
+    Cons' 3 (reader (\b ->
+      Last' (a + b)))))
+
+{- ORMOLU_ENABLE -}
 
 -- |
 --
@@ -101,31 +98,28 @@ runNonEmptyList' (Cons' a f) = runNonEmptyList' (runReader f a)
 -- Third Pass
 -- ========================================
 
-data Wrap a b c = Wrap a (b c) deriving (Functor)
+data Container a m k = Container a (m k) deriving (Functor)
 
 data NonEmptyList'' f a = Last'' a | Cons'' (f (NonEmptyList'' f a))
   deriving (Functor)
 
-threePlusFour :: NonEmptyList'' (Wrap Int (Reader Int)) Int
+{- ORMOLU_DISABLE -}
+
+threePlusFour :: NonEmptyList'' (Container Int (Reader Int)) Int
 threePlusFour =
-  Cons''
-    ( Wrap
-        3
-        ( reader
-            ( \a ->
-                Cons''
-                  (Wrap 4 (reader (\b -> Last'' (a + b))))
-            )
-        )
-    )
+  Cons'' (Container 3 (reader (\a ->
+    Cons'' (Container 4 (reader (\b ->
+      Last'' (a + b)))))))
+
+{- ORMOLU_ENABLE -}
 
 -- |
 --
 -- >>> runNonEmptyList'' threePlusFour
 -- 5
-runNonEmptyList'' :: NonEmptyList'' (Wrap Int (Reader Int)) Int -> Int
+runNonEmptyList'' :: NonEmptyList'' (Container Int (Reader Int)) Int -> Int
 runNonEmptyList'' (Last'' a) = a
-runNonEmptyList'' (Cons'' (Wrap a f)) = runNonEmptyList'' (runReader f a)
+runNonEmptyList'' (Cons'' (Container a f)) = runNonEmptyList'' (runReader f a)
 
 instance (Functor f) => Applicative (NonEmptyList'' f)
 
@@ -148,12 +142,6 @@ instance (Functor f) => Functor (Free f) where
   fmap f (Pure a) = Pure (f a)
   fmap f (Free g) = Free (fmap (fmap f) g)
 
-monadicAp :: forall f a b. Functor f => Free f (a -> b) -> Free f a -> Free f b
-monadicAp f g = do
-  f' <- f
-  g' <- g
-  pure (f' g')
-
 instance (Functor f) => Applicative (Free f) where
   pure = Pure
 
@@ -168,7 +156,7 @@ instance (Functor f) => Monad (Free f) where
 -- Teletype
 -- ========================================
 
-data Teletype a = Read a | Write String a deriving (Functor, Show)
+data Teletype k = Read k | Write String k deriving (Functor, Show)
 
 read :: Free Teletype String
 read = Free (Read (Pure "hello"))

@@ -8,6 +8,6 @@ filesToFormat=$(
 
 for path in $filesToFormat
 do
-  ormolu --mode inplace $path
+  ormolu --ghc-opt -XTypeApplications --mode inplace $path
   git add $path
 done;
